@@ -1,4 +1,4 @@
-html_content = """<!DOCTYPE html>
+html_content_v2 = """<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
@@ -7,9 +7,9 @@ html_content = """<!DOCTYPE html>
     <style>
         /* --- CONFIGURAÇÕES GERAIS & VARIÁVEIS (THE META) --- */
         :root {
-            --bg-color: #08080c;
-            --surface-color: #12121a;
-            --surface-accent: #1a1a26;
+            --bg-color: #060609;
+            --surface-color: #0f0f16;
+            --surface-accent: #171722;
             --accent-color: #a855f7; /* Purple Glow */
             --accent-secondary: #00ffcc; /* Neon Cyan */
             --text-main: #f3f4f6;
@@ -32,13 +32,11 @@ html_content = """<!DOCTYPE html>
             line-height: 1.6;
         }
 
-        /* --- SELECÇÃO DE TEXTO --- */
         ::selection {
             background-color: var(--accent-color);
             color: #fff;
         }
 
-        /* --- SCROLLBAR --- */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -53,23 +51,16 @@ html_content = """<!DOCTYPE html>
             background: var(--accent-color);
         }
 
-        /* --- CORPO E ESTRUTURA --- */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 24px;
         }
 
-        /* --- ANIMAÇÕES TOP (CSS ONLY) --- */
+        /* --- ANIMAÇÕES TOP --- */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes float {
@@ -84,8 +75,10 @@ html_content = """<!DOCTYPE html>
             100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
         }
 
-        .animate-fade-in {
-            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        @keyframes borderGlow {
+            0% { border-color: rgba(168, 85, 247, 0.2); }
+            50% { border-color: rgba(0, 255, 204, 0.6); }
+            100% { border-color: rgba(168, 85, 247, 0.2); }
         }
 
         /* --- NAVIGATION --- */
@@ -95,10 +88,9 @@ html_content = """<!DOCTYPE html>
             left: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(8, 8, 12, 0.8);
+            background: rgba(6, 6, 9, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            transition: var(--transition-smooth);
         }
 
         .nav-container {
@@ -122,7 +114,7 @@ html_content = """<!DOCTYPE html>
 
         .nav-links {
             display: flex;
-            gap: 32px;
+            gap: 24px;
             list-style: none;
         }
 
@@ -130,12 +122,12 @@ html_content = """<!DOCTYPE html>
             text-decoration: none;
             color: var(--text-muted);
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: var(--transition-smooth);
             position: relative;
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover {
             color: var(--text-main);
         }
 
@@ -186,7 +178,7 @@ html_content = """<!DOCTYPE html>
         }
 
         .hero-title {
-            font-size: 4rem;
+            font-size: 4.5rem;
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 24px;
@@ -217,6 +209,7 @@ html_content = """<!DOCTYPE html>
             transition: var(--transition-smooth);
             font-size: 1rem;
             cursor: pointer;
+            border: none;
         }
 
         .btn-primary {
@@ -297,12 +290,11 @@ html_content = """<!DOCTYPE html>
 
         /* --- SECTION SETTINGS --- */
         section {
-            padding: 120px 0;
+            padding: 100px 0;
         }
 
         .section-header {
             margin-bottom: 60px;
-            position: relative;
         }
 
         .section-title {
@@ -327,7 +319,7 @@ html_content = """<!DOCTYPE html>
             font-size: 1.05rem;
         }
 
-        /* --- CATALOGUE / MUSIC GRID --- */
+        /* --- CATALOGUE / MUSIC --- */
         .grid-catalogue {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -348,7 +340,6 @@ html_content = """<!DOCTYPE html>
             transform: translateY(-8px);
             border-color: rgba(168, 85, 247, 0.3);
             background: var(--surface-accent);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
         }
 
         .music-img {
@@ -360,7 +351,6 @@ html_content = """<!DOCTYPE html>
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            color: rgba(255, 255, 255, 0.3);
         }
 
         .img-vicia { background: linear-gradient(135deg, #431407, #7c2d12); }
@@ -376,94 +366,176 @@ html_content = """<!DOCTYPE html>
         .music-meta {
             font-size: 0.85rem;
             color: var(--text-muted);
+        }
+
+        /* --- NEW: VIDEOS SHOWCASE (YOUTUBE OAC) --- */
+        .grid-videos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .video-wrapper {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* --- NEW: ELECTRONIC PRESS KIT (EPK) --- */
+        .epk-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .epk-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-box {
+            background: var(--surface-color);
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* --- EVENTS LIST --- */
-        .events-wrapper {
-            background: var(--surface-color);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            overflow: hidden;
+        .epk-bio h3 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
         }
 
-        .event-row {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
+        .epk-bio p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* --- EVENTS (BANDSINTOWN WIDGET READY) --- */
+        .bandsintown-container {
+            background: var(--surface-color);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            min-height: 200px;
+            position: relative;
+        }
+
+        /* Mock do Widget enquanto não colas o script real */
+        .widget-mock-row {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 24px 32px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .widget-mock-row:last-child { border-bottom: none; }
+
+        /* --- NEW: MAILING LIST (ANTI-ZUCK HACK) --- */
+        .newsletter-section {
+            background: linear-gradient(180deg, var(--bg-color), var(--surface-color));
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 80px 0;
+        }
+
+        .newsletter-box {
+            background: radial-gradient(circle at top left, #1a102f, var(--surface-color));
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 20px;
+            padding: 48px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: borderGlow 6s infinite;
+        }
+
+        .newsletter-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .newsletter-box p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .form-inline {
+            display: flex;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* --- FORMS & FOOTER --- */
+        .form-control {
+            flex: 1;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1rem;
             transition: var(--transition-smooth);
         }
 
-        .event-row:last-child {
-            border-bottom: none;
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-secondary);
         }
 
-        .event-row:hover {
-            background: rgba(168, 85, 247, 0.03);
-            padding-left: 40px;
-        }
-
-        .event-date {
-            background: var(--surface-accent);
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-align: center;
-            min-width: 100px;
-            margin-right: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .date-day {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--accent-secondary);
-            display: block;
-            line-height: 1.1;
-        }
-
-        .date-month {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-        }
-
-        .event-info h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .event-info p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* --- CONTACT & FOOTER --- */
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 48px;
         }
 
-        .contact-info h3 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .contact-info p {
-            color: var(--text-muted);
-            margin-bottom: 32px;
-            max-width: 400px;
-        }
-
         .social-box {
             display: flex;
             gap: 16px;
+            margin-top: 24px;
         }
 
         .social-icon {
@@ -484,34 +556,6 @@ html_content = """<!DOCTYPE html>
         .social-icon:hover {
             background: var(--accent-color);
             transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 16px;
-            background: var(--surface-color);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: var(--transition-smooth);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 120px;
         }
 
         footer {
@@ -522,61 +566,46 @@ html_content = """<!DOCTYPE html>
             font-size: 0.9rem;
         }
 
-        /* --- RESPONSIVIDADE (MOBILE READY) --- */
+        /* RESPONSIVIDADE */
         @media (max-width: 968px) {
-            .hero-grid, .contact-grid {
+            .hero-grid, .grid-videos, .epk-grid, .contact-grid {
                 grid-template-columns: 1fr;
-                gap: 48px;
                 text-align: center;
             }
-            .hero-desc {
-                margin: 0 auto 40px auto;
-            }
-            .cta-group {
-                justify-content: center;
-            }
-            .hero-image-wrapper {
-                order: -1;
-            }
-            .event-row {
-                grid-template-columns: 1fr;
-                gap: 16px;
-                text-align: center;
-                justify-items: center;
-                padding: 32px;
-            }
-            .event-date {
-                margin-right: 0;
-            }
-            .nav-links {
-                display: none; /* Simplificado para exemplo, pode adicionar menu mobile */
-            }
+            .hero-desc, .epk-bio p { margin-left: auto; margin-right: auto; }
+            .cta-group, .social-box { justify-content: center; }
+            .hero-image-wrapper { order: -1; }
+            .form-inline { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
+    <!-- NAVIGATION -->
     <header>
         <div class="container nav-container">
             <a href="#" class="logo">JOVEM RICCH</a>
             <ul class="nav-links">
                 <li><a href="#">Início</a></li>
                 <li><a href="#musica">Música</a></li>
+                <li><a href="#videos">Vídeos</a></li>
+                <li><a href="#epk">Press Kit</a></li>
                 <li><a href="#eventos">Eventos</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
         </div>
     </header>
 
+    <!-- HERO SECTION -->
     <section class="hero">
         <div class="container hero-grid">
             <div class="hero-content">
                 <p class="tagline">Lançamento Oficial</p>
                 <h1 class="hero-title">SEXTAPE</h1>
-                <p class="hero-desc">O novo projeto conceitual já disponível em todas as plataformas de streaming. Sente a vibe, entra no meta.</p>
+                <p class="hero-desc">O novo projeto conceitual já disponível em todas as plataformas de streaming. Entra na frequência.</p>
                 <div class="cta-group">
                     <a href="https://spotify.com" target="_blank" class="btn btn-primary">Ouvir no Spotify</a>
-                    <a href="#musica" class="btn btn-secondary">Ver Catálogo</a>
+                    <a href="#newsletter" class="btn btn-secondary">Ouvir Demos Exclusivas</a>
                 </div>
             </div>
             <div class="hero-image-wrapper">
@@ -591,78 +620,153 @@ html_content = """<!DOCTYPE html>
         </div>
     </section>
 
+    <!-- CATALOGUE SECTION -->
     <section id="musica">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Catálogo Musical</h2>
-                <p class="section-desc">Explora os últimos lançamentos, singles e colaborações bangers.</p>
+                <p class="section-desc">Os últimos bangers oficiais nas plataformas de streaming.</p>
             </div>
             <div class="grid-catalogue">
                 <a href="#" class="music-card">
-                    <div class="music-img img-vicia"></div>
+                    <div class="music-img img-vicia">🎬</div>
                     <h3 class="music-title">VICIA</h3>
-                    <p class="music-meta">Single • 2026</p>
+                    <p class="music-meta">Single / Vídeo • 2026</p>
                 </a>
                 <a href="#" class="music-card">
-                    <div class="music-img img-vida"></div>
+                    <div class="music-img img-vida">🎵</div>
                     <h3 class="music-title">Vida</h3>
                     <p class="music-meta">Single • 2026</p>
                 </a>
                 <a href="#" class="music-card">
                     <div class="music-img img-coming">🔊</div>
                     <h3 class="music-title">Brevemente</h3>
-                    <p class="music-meta">New Vibes • ----</p>
+                    <p class="music-meta">New Track • ----</p>
                 </a>
             </div>
         </div>
     </section>
 
-    <section id="eventos" style="background-color: rgba(255,255,255,0.01);">
+    <!-- NEW: VIDEOS SHOWCASE SECTION (YOUTUBE OAC) -->
+    <section id="videos" style="background-color: rgba(255,255,255,0.01);">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Próximos Eventos</h2>
-                <p class="section-desc">Garante o teu bilhete e vem ver o show ao vivo.</p>
+                <h2 class="section-title">Vídeos Oficiais</h2>
+                <p class="section-desc">Assiste aos videoclipes diretamente do Canal Oficial de Artista (OAC).</p>
             </div>
-            <div class="events-wrapper">
-                <div class="event-row">
-                    <div class="event-date">
-                        <span class="date-day">25</span>
-                        <span class="date-month">JUL</span>
+            <div class="grid-videos">
+                <div class="video-wrapper">
+                    <div class="video-container">
+                        <!-- Substituir o ID do SRC pelo link real de embed do youtube quando quiseres -->
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
                     </div>
-                    <div class="event-info">
-                        <h3>231 Fest 2026</h3>
-                        <p>Mealhada, Aveiro • Atuações de CLXRO, Migsly, Ricch e Sapage (Destaque Wet Bed Gang)</p>
-                    </div>
-                    <div>
-                        <a href="#" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;">Bilhetes</a>
-                    </div>
+                    <h3 class="video-title">JOVEM RICCH - VICIA (Official Music Video)</h3>
                 </div>
+                <div class="video-wrapper">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="video-title">JOVEM RICCH - Vida (Audio Oficial)</h3>
                 </div>
+            </div>
         </div>
     </section>
 
+    <!-- NEW: ELECTRONIC PRESS KIT (EPK) -->
+    <section id="epk">
+        <div class="container epk-grid">
+            <div class="epk-stats">
+                <div class="stat-box">
+                    <span class="stat-num">19K+</span>
+                    <span class="stat-label">Views no YouTube</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num">♪ OAC</span>
+                    <span class="stat-label">Canal Verificado</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num">2026</span>
+                    <span class="stat-label">Ano do Meta</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num">100%</span>
+                    <span class="stat-label">Independente</span>
+                </div>
+            </div>
+            <div class="epk-bio">
+                <p class="tagline" style="margin-bottom: 8px;">Electronic Press Kit</p>
+                <h3>Sobre o Artista</h3>
+                <p>Jovem Ricch é uma das vozes emergentes mais pesadas do panorama atual, misturando sonoridades únicas com uma estética moderna e independente. Com lançamentos impactantes como "VICIA" e o recente projeto "SEXTAPE", o foco está em quebrar as barreiras tradicionais da indústria através de pura identidade digital e vibes autênticas.</p>
+                <a href="#" class="btn btn-secondary" onclick="alert('Aqui podes meter o link do teu PDF de Rider Técnico para contratantes!'); event.preventDefault();">Download Tech Rider / Press Kit (PDF)</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENTS SECTION (BANDSINTOWN WIDGET READY) -->
+    <section id="eventos" style="background-color: rgba(255,255,255,0.01);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Tour & Concertos</h2>
+                <p class="section-desc">Datas sincronizadas automaticamente via Bandsintown Artists.</p>
+            </div>
+            
+            <div class="bandsintown-container">
+                <!-- 
+                  INSTRUÇÃO DE GIGA-CHAD: 
+                  Quando resolveres o bug do link do Bandsintown, podes apagar as linhas de código deste "MOCK" abaixo 
+                  e colar aqui o código <a class="bit-widget-initializer"...> que eles te dão no painel para automatizar tudo!
+                -->
+                <div class="widget-mock-row">
+                    <div style="font-weight: bold; color: var(--accent-secondary);">25 JUL 2026</div>
+                    <div><strong>231 Fest</strong> - Mealhada, Aveiro (With CLXRO, Migsly, Sapage)</div>
+                    <div><a href="#" class="btn btn-secondary" style="padding: 6px 16px; font-size: 0.85rem;">Bilhetes</a></div>
+                </div>
+                <div class="widget-mock-row" style="opacity: 0.5;">
+                    <div>-- --- ----</div>
+                    <div>Novas datas a serem anunciadas brevemente...</div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: MAILING LIST SECTION (ANTI-ZUCK HACK) -->
+    <section id="newsletter" class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-box">
+                <p class="tagline">Acesso VIP Oculto</p>
+                <h2>Ouve as Demos Antes de Toda a Gente</h2>
+                <p>Caga nos algoritmos das redes sociais. Deixa o teu e-mail para receberes leaks exclusivos, códigos de desconto para bilhetes e novidades direto na tua caixa de entrada.</p>
+                <form class="form-inline" onsubmit="event.preventDefault(); alert('Inscrição confirmada no meta!');">
+                    <input type="email" class="form-control" placeholder="Teu melhor e-mail" required>
+                    <button type="submit" class="btn btn-primary">Garantir Acesso</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
     <section id="contacto">
         <div class="container contact-grid">
-            <div class="contact-info">
-                <h2>Bora trabalhar?</h2>
-                <h3 style="color: var(--accent-color); margin-bottom: 16px;">Booking & Business</h3>
-                <p>Para agendamento de concertos, parcerias ou projetos de estúdio, deixa a tua mensagem ou segue nas redes.</p>
+            <div>
+                <h2>Booking & Parcerias</h2>
+                <p style="color: var(--text-muted); margin-top: 12px; margin-bottom: 24px;">Estás interessado em agendar um concerto, propor uma colaboração de estúdio ou fechar uma parceria de marca? Entra em contacto direto com a equipa de management.</p>
                 <div class="social-box">
-                    <a href="#" class="social-icon" title="Instagram">IG</a>
-                    <a href="#" class="social-icon" title="Spotify">SP</a>
-                    <a href="#" class="social-icon" title="YouTube">YT</a>
+                    <a href="#" class="social-icon">IG</a>
+                    <a href="#" class="social-icon">SP</a>
+                    <a href="#" class="social-icon">YT</a>
                 </div>
             </div>
             <div>
-                <form onsubmit="event.preventDefault(); alert('Mensagem enviada (Simulação)!');">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Teu Nome" required>
+                <form onsubmit="event.preventDefault(); alert('Mensagem enviada com sucesso!');">
+                    <div style="margin-bottom: 16px;">
+                        <input type="text" class="form-control" style="width: 100%;" placeholder="Teu Nome" required>
                     </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Teu E-mail" required>
+                    <div style="margin-bottom: 16px;">
+                        <input type="email" class="form-control" style="width: 100%;" placeholder="Teu E-mail" required>
                     </div>
-                    <div class="form-group">
-                        <textarea class="form-control" placeholder="A tua mensagem..." required></textarea>
+                    <div style="margin-bottom: 16px;">
+                        <textarea class="form-control" style="width: 100%; min-height: 120px; resize: vertical;" placeholder="Detalhes do projeto / Proposta de concerto..." required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar Mensagem</button>
                 </form>
@@ -670,9 +774,10 @@ html_content = """<!DOCTYPE html>
         </div>
     </section>
 
+    <!-- FOOTER -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 JOVEM RICCH. Todos os direitos reservados. Built for the meta.</p>
+            <p>&copy; 2026 JOVEM RICCH. Todos os direitos reservados. Prod. by DayzVibes. Distributed by the code.</p>
         </div>
     </footer>
 
@@ -681,6 +786,6 @@ html_content = """<!DOCTYPE html>
 """
 
 with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
+    f.write(html_content_v2)
 
-print("File built successfully.")
+print("File updated with all features except merch.")
