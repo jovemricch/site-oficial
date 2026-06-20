@@ -1612,18 +1612,20 @@
         <div class="newsletter-box">
             <p class="tagline">Acesso VIP</p>
             <h2>Ouve as Demos Antes de Toda a Gente</h2>
-            <p>Deixa o teu e-mail para receberes leaks exclusivos e novidades direto na tua caixa de entrada.</p>
+            <p>Deixe o seu e-mail para receber leaks exclusivos e novidades diretamente na sua caixa de entrada.</p>
 
-            <!-- O HACK DO SUCESSO: Guarda o e-mail e cospe o fã direto no pre-save -->
-            <form class="form-inline" action="https://formsubmit.co/filipe4931@gmail.com" method="POST">
-                <!-- Redirecionamento automático pós-envio -->
+            <!-- target="_blank" garante a abertura num novo separador -->
+            <form class="form-inline" id="newsletterForm" action="https://formsubmit.co/filipe4931@gmail.com" method="POST" target="_blank">
                 <input type="hidden" name="_next" value="https://too.fm/sextape">
                 <input type="hidden" name="_subject" value="🔥 Novo Subscritor Newsletter - Jovem Ricch">
                 <input type="hidden" name="_captcha" value="false">
 
-                <input type="email" name="email" class="form-control" placeholder="Teu melhor e-mail" required>
-                <button type="submit" class="btn btn-primary">Garantir Acesso</button>
+                <input type="email" name="email" class="form-control" placeholder="O seu e-mail" required>
+                <button type="submit" id="newsletterBtn" class="btn btn-primary">Garantir Acesso</button>
             </form>
+
+
+            <p id="redirectNotice" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 10px; display: none;"></p>
         </div>
     </div>
 </section>
@@ -1941,6 +1943,41 @@
         }, { threshold: 0.5 });
 
         counters.forEach(counter => observer.observe(counter));
+    })();
+
+    (() => {
+        const form = document.getElementById('newsletterForm');
+        const btn = document.getElementById('newsletterBtn');
+        const notice = document.getElementById('redirectNotice');
+
+        if (!form || !btn || !notice) return;
+
+        form.addEventListener('submit', (e) => {
+            if (form.dataset.ready === "true") return;
+
+            e.preventDefault();
+
+            btn.disabled = true;
+            btn.textContent = "A processar...";
+            btn.style.opacity = "0.7";
+
+            notice.textContent = "Obrigado. A abrir a página de pre-save num novo separador...";
+            notice.style.display = "block";
+
+            setTimeout(() => {
+                form.dataset.ready = "true";
+                form.submit();
+
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.textContent = "Garantir Acesso";
+                    btn.style.opacity = "1";
+                    notice.style.display = "none";
+                    form.dataset.ready = "false";
+                    form.reset();
+                }, 1000);
+            }, 2000);
+        });
     })();
 
 </script>
