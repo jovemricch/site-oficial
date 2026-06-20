@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOVEM RICCH | Official Website</title>
+    <style>
+        /* --- CONFIGURAÇÕES GERAIS & VARIÁVEIS (THE META) --- */
+        :root {
+            --bg-color: #060609;
+            --surface-color: #0f0f16;
+            --surface-accent: #171722;
+            --accent-color: #a855f7; /* Purple Glow */
+            --accent-secondary: #00ffcc; /* Neon Cyan */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        html {
+            background-color: var(--bg-color);
+        }
+
+        body {
+            background-color: transparent;
+            color: var(--text-main);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+            isolation: isolate;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        body::before {
+            background:
+                radial-gradient(circle at 18% 16%, rgba(168, 85, 247, 0.2), transparent 28%),
+                radial-gradient(circle at 82% 22%, rgba(0, 255, 204, 0.12), transparent 24%),
+                radial-gradient(circle at 48% 84%, rgba(168, 85, 247, 0.12), transparent 32%),
+                linear-gradient(135deg, #050507 0%, #090912 48%, #050508 100%);
+            animation: ambientShift 16s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            z-index: -1;
+            opacity: 0.22;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent 78%);
+            animation: gridDrift 22s linear infinite;
+        }
+
+        ::selection {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface-accent);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- ANIMAÇÕES TOP --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(168, 85, 247, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+        }
+
+        @keyframes borderGlow {
+            0% { border-color: rgba(168, 85, 247, 0.2); }
+            50% { border-color: rgba(0, 255, 204, 0.6); }
+            100% { border-color: rgba(168, 85, 247, 0.2); }
+        }
+
+        @keyframes ambientShift {
+            0% { filter: hue-rotate(0deg); transform: scale(1); }
+            100% { filter: hue-rotate(16deg); transform: scale(1.08); }
+        }
+
+        @keyframes gridDrift {
+            from { background-position: 0 0, 0 0; }
+            to { background-position: 72px 144px, 72px 144px; }
+        }
+
+        @keyframes loaderSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes loaderPulse {
+            0%, 100% { opacity: 0.42; transform: scale(0.92); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes loadingBar {
+            0% { transform: translateX(-100%); }
+            55% { transform: translateX(8%); }
+            100% { transform: translateX(130%); }
+        }
+
+        body.is-loading {
+            overflow: hidden;
+        }
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at 50% 35%, rgba(168, 85, 247, 0.22), transparent 32%),
+                radial-gradient(circle at 70% 62%, rgba(0, 255, 204, 0.12), transparent 28%),
+                rgba(6, 6, 9, 0.94);
+            backdrop-filter: blur(28px) saturate(160%);
+            -webkit-backdrop-filter: blur(28px) saturate(160%);
+            transition: opacity 0.7s ease, visibility 0.7s ease;
+        }
+
+        .page-loader.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-card {
+            width: min(360px, 100%);
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            padding: 34px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 22px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04)),
+                rgba(12, 12, 20, 0.58);
+            box-shadow:
+                0 28px 80px rgba(0, 0, 0, 0.48),
+                inset 0 1px 0 rgba(255, 255, 255, 0.18);
+            text-align: center;
+        }
+
+        .loader-mark {
+            width: 86px;
+            height: 86px;
+            position: relative;
+            display: grid;
+            place-items: center;
+        }
+
+        .loader-mark::before,
+        .loader-mark::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+        }
+
+        .loader-mark::before {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-secondary);
+            border-right-color: var(--accent-color);
+            filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.45));
+            animation: loaderSpin 1s linear infinite;
+        }
+
+        .loader-mark::after {
+            inset: 16px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.36), rgba(0, 255, 204, 0.1) 58%, transparent 62%);
+            animation: loaderPulse 1.4s ease-in-out infinite;
+        }
+
+        .loader-logo {
+            position: relative;
+            z-index: 1;
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .loader-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .loader-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .loader-progress {
+            width: 100%;
+            height: 4px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .loader-progress span {
+            display: block;
+            width: 60%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, transparent, var(--accent-secondary), var(--accent-color), transparent);
+            animation: loadingBar 1.25s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .loader-mark::before,
+            .loader-mark::after,
+            .loader-progress span {
+                animation: none;
+            }
+
+            .page-loader {
+                transition-duration: 0.2s;
+            }
+
+            body::before,
+            body::after {
+                animation: none;
+            }
+        }
+
+        /* --- NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 16px;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: transparent;
+            border-bottom: 0;
+            pointer-events: none;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: -16px 0 auto;
+            height: 112px;
+            background: linear-gradient(180deg, rgba(6, 6, 9, 0.72), rgba(6, 6, 9, 0));
+            pointer-events: none;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 68px;
+            padding: 0 48px;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        .nav-container::before {
+            content: '';
+            position: absolute;
+            inset: 0 24px;
+            z-index: -1;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 18px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04)),
+                rgba(10, 10, 16, 0.48);
+            box-shadow:
+                0 18px 44px rgba(0, 0, 0, 0.34),
+                inset 0 1px 0 rgba(255, 255, 255, 0.16),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(22px) saturate(165%);
+            -webkit-backdrop-filter: blur(22px) saturate(165%);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--text-main);
+            background: linear-gradient(45deg, #fff, var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            min-height: 36px;
+            padding: 0 14px;
+            border-radius: 999px;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+            position: relative;
+            background: radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .hero-content {
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            max-width: 480px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            animation: pulseGlow 3s infinite;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            background-color: #b566ff;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+        }
+
+        .featured-card {
+            background: var(--surface-color);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .card-img {
+            width: 100%;
+            aspect-ratio: 1;
+            background:
+                linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.22)),
+                url("https://a5.mzstatic.com/us/r1000/0/Music221/v4/b8/d2/00/b8d20046-dcf7-e133-4239-2ff3e51d98e5/1124952.jpg") center/cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--accent-secondary);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* --- SECTION SETTINGS --- */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::after {
+            content: '';
+            height: 4px;
+            width: 60px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* --- CATALOGUE / MUSIC --- */
+        .grid-catalogue {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .music-card {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .music-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(168, 85, 247, 0.3);
+            background: var(--surface-accent);
+        }
+
+        .music-img {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+            box-shadow: inset 0 -70px 80px rgba(0, 0, 0, 0.32);
+        }
+
+        .img-vicia { background-image: url("https://a5.mzstatic.com/us/r1000/0/Music211/v4/5a/0a/08/5a0a089a-9dea-23ee-da53-8921db07581f/1023087.jpg"); }
+        .img-vida { background-image: url("https://a5.mzstatic.com/us/r1000/0/Music211/v4/69/f5/33/69f5335f-cd88-1132-3bf7-24cdb6855296/983383.jpg"); }
+        .img-coming { background: linear-gradient(135deg, #151520, #2a2a38); }
+
+        .music-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .music-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* --- NEW: VIDEOS SHOWCASE (YOUTUBE OAC) --- */
+        .grid-videos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .video-wrapper {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* --- ELECTRONIC PRESS KIT (EPK) --- */
+        .epk-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+            gap: 36px;
+            align-items: stretch;
+            padding: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+                rgba(15, 15, 22, 0.72);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+        }
+
+        .epk-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .epk-kicker {
+            margin-bottom: 10px;
+        }
+
+        .epk-title {
+            font-size: 2.35rem;
+            line-height: 1.08;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .epk-lead {
+            color: var(--text-main);
+            font-size: 1.08rem;
+            max-width: 680px;
+            margin-bottom: 18px;
+        }
+
+        .epk-copy {
+            color: var(--text-muted);
+            max-width: 720px;
+            margin-bottom: 24px;
+        }
+
+        .epk-highlights {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 28px;
+            list-style: none;
+        }
+
+        .epk-highlights li {
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.035);
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .epk-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .epk-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .epk-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .stat-box {
+            min-height: 128px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.045);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: left;
+        }
+
+        .stat-num {
+            font-size: 2rem;
+            line-height: 1;
+            font-weight: 900;
+            color: var(--text-main);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .epk-contact-card {
+            padding: 20px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(0, 255, 204, 0.16);
+        }
+
+        .epk-contact-card h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .epk-contact-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .epk-contact-row strong {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .epk-contact-row a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+        }
+
+        .epk-contact-row a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- EVENTS (BANDSINTOWN API) --- */
+        .bandsintown-container {
+            background: var(--surface-color);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 200px;
+            position: relative;
+        }
+
+        .events-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 136px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .event-row {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .event-row:last-child {
+            border-bottom: none;
+        }
+
+        .event-date {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            color: var(--accent-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .event-date span:first-child {
+            font-size: 1.4rem;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .event-date span:last-child {
+            font-size: 0.78rem;
+        }
+
+        .event-info strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .event-info span {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .event-source {
+            margin-top: 18px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-align: right;
+        }
+
+        /* --- NEW: MAILING LIST (ANTI-ZUCK HACK) --- */
+        .newsletter-section {
+            background: linear-gradient(180deg, var(--bg-color), var(--surface-color));
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 80px 0;
+        }
+
+        .newsletter-box {
+            background: radial-gradient(circle at top left, #1a102f, var(--surface-color));
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 20px;
+            padding: 48px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: borderGlow 6s infinite;
+        }
+
+        .newsletter-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .newsletter-box p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .form-inline {
+            display: flex;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* --- FORMS & FOOTER --- */
+        .form-control {
+            flex: 1;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-secondary);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+        }
+
+        .social-box {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .social-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--surface-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .social-icon svg {
+            width: 21px;
+            height: 21px;
+            display: block;
+            fill: currentColor;
+        }
+
+        .social-icon:hover {
+            background: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .social-icon.spotify:hover {
+            background: #1db954;
+        }
+
+        .social-icon.youtube:hover {
+            background: #ff0033;
+        }
+
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 968px) {
+            .hero-grid, .grid-videos, .epk-panel, .contact-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            header {
+                top: 10px;
+            }
+
+            header::before {
+                height: 150px;
+            }
+
+            .nav-container {
+                min-height: 0;
+                padding: 14px 28px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .nav-container::before {
+                inset: 0 12px;
+                border-radius: 16px;
+            }
+
+            .logo {
+                align-self: center;
+                font-size: 1.15rem;
+                letter-spacing: 1.4px;
+            }
+
+            .nav-links {
+                width: 100%;
+                gap: 6px;
+                justify-content: center;
+                overflow-x: auto;
+                padding: 2px 0 4px;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-links a {
+                min-height: 34px;
+                padding: 0 12px;
+                white-space: nowrap;
+                font-size: 0.82rem;
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .nav-links a::after {
+                display: none;
+            }
+
+            .hero {
+                min-height: auto;
+                padding-top: 178px;
+            }
+
+            .hero-desc, .epk-lead, .epk-copy {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .cta-group, .social-box {
+                justify-content: center;
+            }
+
+            .hero-image-wrapper {
+                order: -1;
+            }
+
+            .form-inline {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            section {
+                padding: 68px 0;
+            }
+
+            .hero {
+                padding-top: 166px;
+            }
+
+            .hero-grid {
+                gap: 30px;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+                letter-spacing: 0;
+            }
+
+            .tagline {
+                font-size: 0.75rem;
+                letter-spacing: 2.5px;
+            }
+
+            .hero-desc, .section-desc, .newsletter-box p {
+                font-size: 0.98rem;
+            }
+
+            .cta-group, .form-inline {
+                width: 100%;
+            }
+
+            .btn, .form-control {
+                width: 100%;
+            }
+
+            .section-header {
+                margin-bottom: 36px;
+            }
+
+            .section-title {
+                justify-content: center;
+                font-size: 2rem;
+                line-height: 1.15;
+                flex-wrap: wrap;
+            }
+
+            .section-title::after {
+                width: 42px;
+            }
+
+            .grid-catalogue {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .music-card, .video-wrapper, .bandsintown-container, .newsletter-box {
+                border-radius: 14px;
+            }
+
+            .featured-card, .newsletter-box, .bandsintown-container {
+                padding: 22px;
+            }
+
+            .card-img {
+                height: 260px;
+            }
+
+            .epk-panel {
+                padding: 24px;
+                gap: 24px;
+            }
+
+            .epk-title {
+                font-size: 1.85rem;
+            }
+
+            .epk-highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .epk-actions {
+                width: 100%;
+            }
+
+            .epk-stats {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .stat-box {
+                min-height: 104px;
+                padding: 20px;
+                text-align: center;
+            }
+
+            .event-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .event-date {
+                align-items: center;
+            }
+
+            .event-source {
+                text-align: center;
+            }
+
+            .contact-grid {
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .nav-container {
+                padding: 12px 22px;
+            }
+
+            .hero {
+                padding-top: 158px;
+            }
+
+            .hero-title {
+                font-size: 2.45rem;
+            }
+
+            .newsletter-box h2, .epk-title {
+                font-size: 1.6rem;
+            }
+
+            .epk-panel {
+                padding: 18px;
+            }
+
+            .epk-contact-row {
+                flex-direction: column;
+                gap: 2px;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body class="is-loading">
+
+    <div class="page-loader" id="pageLoader" role="status" aria-live="polite" aria-label="Loading website">
+        <div class="loader-card">
+            <div class="loader-mark" aria-hidden="true">
+                <span class="loader-logo">JR</span>
+            </div>
+            <div>
+                <div class="loader-title">JOVEM RICCH</div>
+                <p class="loader-text">Loading...</p>
+            </div>
+            <div class="loader-progress" aria-hidden="true"><span></span></div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">JOVEM RICCH</a>
+            <ul class="nav-links">
+                <li><a href="#">Início</a></li>
+                <li><a href="#musica">Música</a></li>
+                <li><a href="#videos">Vídeos</a></li>
+                <li><a href="#epk">Press Kit</a></li>
+                <li><a href="#eventos">Eventos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <p class="tagline">Lançamento Oficial</p>
+                <h1 class="hero-title">SEXTAPE</h1>
+                <p class="hero-desc">O novo projeto conceitual já disponível em todas as plataformas de streaming. Entra na frequência.</p>
+                <div class="cta-group">
+                    <a href="https://spotify.com" target="_blank" class="btn btn-primary">Ouvir no Spotify</a>
+                    <a href="#newsletter" class="btn btn-secondary">Ouvir Demos Exclusivas</a>
+                </div>
+            </div>
+            <div class="hero-image-wrapper">
+                <div class="featured-card">
+                    <div class="card-img">
+                        <span class="card-badge">HOT 🔥</span>
+                    </div>
+                    <h3 style="margin-bottom: 4px; font-weight: 800;">SEXTAPE</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Álbum / Projeto • 2026</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATALOGUE SECTION -->
+    <section id="musica">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Catálogo Musical</h2>
+                <p class="section-desc">Os últimos bangers oficiais nas plataformas de streaming.</p>
+            </div>
+            <div class="grid-catalogue">
+                <a href="#" class="music-card">
+                    <div class="music-img img-vicia" aria-label="Capa de VICIA"></div>
+                    <h3 class="music-title">VICIA</h3>
+                    <p class="music-meta">Single / Vídeo • 2026</p>
+                </a>
+                <a href="#" class="music-card">
+                    <div class="music-img img-vida" aria-label="Capa de Vida"></div>
+                    <h3 class="music-title">Vida</h3>
+                    <p class="music-meta">Single • 2026</p>
+                </a>
+                <a href="#" class="music-card">
+                    <div class="music-img img-coming">🔊</div>
+                    <h3 class="music-title">Brevemente</h3>
+                    <p class="music-meta">New Track • ----</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: VIDEOS SHOWCASE SECTION (YOUTUBE OAC) -->
+    <section id="videos" style="background-color: rgba(255,255,255,0.01);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Vídeos Oficiais</h2>
+                <p class="section-desc">Assiste aos videoclipes diretamente do Canal Oficial de Artista (OAC).</p>
+            </div>
+            <div class="grid-videos">
+                <div class="video-wrapper">
+                    <div class="video-container">
+                        <!-- Substituir o ID do SRC pelo link real de embed do youtube quando quiseres -->
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="video-title">JOVEM RICCH - VICIA (Official Music Video)</h3>
+                </div>
+                <div class="video-wrapper">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="video-title">JOVEM RICCH - Vida (Audio Oficial)</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ELECTRONIC PRESS KIT (EPK) -->
+    <section id="epk">
+        <div class="container">
+            <div class="epk-panel">
+                <div class="epk-content">
+                    <p class="tagline epk-kicker">Electronic Press Kit</p>
+                    <h2 class="epk-title">Jovem Ricch: artista independente com visão visual, som atual e presença digital em crescimento.</h2>
+                    <p class="epk-lead">Um projeto focado em singles, vídeos oficiais e performances para públicos jovens ligados ao trap, rap melódico e cultura digital.</p>
+                    <p class="epk-copy">Com lançamentos como "VICIA", "Vida" e o projeto "SEXTAPE", Jovem Ricch apresenta uma identidade direta: estética cuidada, comunicação própria e repertório pronto para palcos, ativações de marca, entrevistas e curadoria editorial.</p>
+                    <ul class="epk-highlights">
+                        <li>Material disponível para imprensa, promotores e parceiros.</li>
+                        <li>Vídeos oficiais e canal de artista verificado no YouTube.</li>
+                        <li>Formato adaptável para showcases, clubes e festivais.</li>
+                        <li>Booking aberto para concertos, colaborações e campanhas.</li>
+                    </ul>
+                    <div class="epk-actions">
+                        <a href="#" class="btn btn-primary" onclick="alert('Substitui este botão pelo link real do teu EPK em PDF.'); event.preventDefault();">Download EPK</a>
+                        <a href="#contacto" class="btn btn-secondary">Contactar Booking</a>
+                    </div>
+                </div>
+
+                <aside class="epk-sidebar" aria-label="Resumo profissional do artista">
+                    <div class="epk-stats">
+                        <div class="stat-box">
+                            <span class="stat-num">200K+</span>
+                            <span class="stat-label">Visualizações acumuladas</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-num">OAC</span>
+                            <span class="stat-label">Canal oficial de artista</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-num">3</span>
+                            <span class="stat-label">Lançamentos em destaque</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-num">PT</span>
+                            <span class="stat-label">Baseado em Portugal</span>
+                        </div>
+                    </div>
+
+                    <div class="epk-contact-card">
+                        <h3>Press & Booking</h3>
+                        <div class="epk-contact-row"><span>Formato</span><strong>Live / Showcase</strong></div>
+                        <div class="epk-contact-row"><span>Materiais</span><strong>Bio, fotos, links</strong></div>
+                        <div class="epk-contact-row"><span>Email</span><strong><a href="mailto:filipe4931@gmail.com">filipe4931@gmail.com</a></strong></div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENTS SECTION (BANDSINTOWN WIDGET READY) -->
+    <section id="eventos" style="background-color: rgba(255,255,255,0.01);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Tour & Concertos</h2>
+                <p class="section-desc">Datas sincronizadas automaticamente via Bandsintown Artists.</p>
+            </div>
+            
+            <div class="bandsintown-container" id="bandsintownEvents" data-artist="Jovem Ricch" data-app-id="32d6410324dab633e648eef76f684c2c">
+                <div class="events-status">A carregar concertos em tempo real...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: MAILING LIST SECTION (ANTI-ZUCK HACK) -->
+    <section id="newsletter" class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-box">
+                <p class="tagline">Acesso VIP Oculto</p>
+                <h2>Ouve as Demos Antes de Toda a Gente</h2>
+                <p>Caga nos algoritmos das redes sociais. Deixa o teu e-mail para receberes leaks exclusivos, códigos de desconto para bilhetes e novidades direto na tua caixa de entrada.</p>
+                <form class="form-inline" onsubmit="event.preventDefault(); alert('Inscrição confirmada no meta!');">
+                    <input type="email" class="form-control" placeholder="Teu melhor e-mail" required>
+                    <button type="submit" class="btn btn-primary">Garantir Acesso</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contacto">
+        <div class="container contact-grid">
+            <div>
+                <h2>Booking & Parcerias</h2>
+                <p style="color: var(--text-muted); margin-top: 12px; margin-bottom: 16px;">Estás interessado em agendar um concerto, propor uma colaboração de estúdio ou fechar uma parceria de marca? Entra em contacto direto com a equipa de management.</p>
+                <p style="margin-bottom: 24px;"><a href="mailto:filipe4931@gmail.com" style="color: var(--accent-secondary); text-decoration: none; font-weight: 700;">filipe4931@gmail.com</a></p>
+                <div class="social-box">
+                    <a href="#" class="social-icon instagram" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 2A3.75 3.75 0 0 0 4 7.75v8.5A3.75 3.75 0 0 0 7.75 20h8.5A3.75 3.75 0 0 0 20 16.25v-8.5A3.75 3.75 0 0 0 16.25 4h-8.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.25-2.35a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"/></svg>
+                    </a>
+                    <a href="#" class="social-icon spotify" aria-label="Spotify">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.75.75 0 0 1-1.03.25c-2.82-1.72-6.38-2.11-10.57-1.15a.75.75 0 0 1-.33-1.46c4.58-1.05 8.52-.59 11.68 1.35a.75.75 0 0 1 .25 1.01Zm1.22-2.72a.9.9 0 0 1-1.24.3c-3.23-1.99-8.16-2.56-11.98-1.4a.9.9 0 1 1-.52-1.72c4.34-1.32 9.75-.68 13.44 1.59a.9.9 0 0 1 .3 1.23Zm.1-2.83c-3.87-2.3-10.25-2.51-13.94-1.39a1.05 1.05 0 1 1-.61-2.01c4.24-1.29 11.24-1.04 15.62 1.56a1.05 1.05 0 1 1-1.07 1.84Z"/></svg>
+                    </a>
+                    <a href="#" class="social-icon youtube" aria-label="YouTube">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.58 7.19a2.73 2.73 0 0 0-1.92-1.93C17.96 4.8 12 4.8 12 4.8s-5.96 0-7.66.46a2.73 2.73 0 0 0-1.92 1.93A28.4 28.4 0 0 0 2 12a28.4 28.4 0 0 0 .42 4.81 2.73 2.73 0 0 0 1.92 1.93c1.7.46 7.66.46 7.66.46s5.96 0 7.66-.46a2.73 2.73 0 0 0 1.92-1.93A28.4 28.4 0 0 0 22 12a28.4 28.4 0 0 0-.42-4.81ZM10 15.27V8.73L15.66 12 10 15.27Z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <form action="https://formsubmit.co/filipe4931@gmail.com" method="POST">
+                    <input type="hidden" name="_subject" value="Novo contacto de booking - Jovem Ricch">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <div style="margin-bottom: 16px;">
+                        <input type="text" name="Nome" class="form-control" style="width: 100%;" placeholder="Teu Nome" autocomplete="name" required>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <input type="email" name="Email" class="form-control" style="width: 100%;" placeholder="Teu E-mail" autocomplete="email" required>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <textarea name="Mensagem" class="form-control" style="width: 100%; min-height: 120px; resize: vertical;" placeholder="Detalhes do projeto / Proposta de concerto..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar Mensagem</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 JOVEM RICCH. Todos os direitos reservados. Prod. by DayzVibes. Distributed by the code.</p>
+        </div>
+    </footer>
+
+    <script>
+        (() => {
+            const loader = document.getElementById('pageLoader');
+            const startedAt = Date.now();
+            const minimumDelay = 900;
+
+            const hideLoader = () => {
+                const wait = Math.max(0, minimumDelay - (Date.now() - startedAt));
+
+                window.setTimeout(() => {
+                    document.body.classList.remove('is-loading');
+                    loader?.classList.add('is-hidden');
+                    window.setTimeout(() => loader?.remove(), 750);
+                }, wait);
+            };
+
+            if (document.readyState === 'complete') {
+                hideLoader();
+            } else {
+                window.addEventListener('load', hideLoader, { once: true });
+            }
+        })();
+
+
+        (() => {
+            const container = document.getElementById('bandsintownEvents');
+            if (!container) return;
+
+            const artist = container.dataset.artist || 'Jovem Ricch';
+            const appId = container.dataset.appId;
+            const endpoint = `https://rest.bandsintown.com/artists/${encodeURIComponent(artist)}/events?app_id=${encodeURIComponent(appId)}&date=upcoming`;
+
+            const clearContainer = () => {
+                while (container.firstChild) container.removeChild(container.firstChild);
+            };
+
+            const renderStatus = (message) => {
+                clearContainer();
+                const status = document.createElement('div');
+                status.className = 'events-status';
+                status.textContent = message;
+                container.appendChild(status);
+            };
+
+            const formatEventDate = (value) => {
+                const date = new Date(value);
+                if (Number.isNaN(date.getTime())) return { day: '--', rest: 'Data a anunciar' };
+
+                return {
+                    day: new Intl.DateTimeFormat('pt-PT', { day: '2-digit' }).format(date),
+                    rest: new Intl.DateTimeFormat('pt-PT', { month: 'short', year: 'numeric' }).format(date).replace('.', '')
+                };
+            };
+
+            const buildEventRow = (event) => {
+                const row = document.createElement('div');
+                row.className = 'event-row';
+
+                const dateParts = formatEventDate(event.datetime);
+                const date = document.createElement('div');
+                date.className = 'event-date';
+                const day = document.createElement('span');
+                day.textContent = dateParts.day;
+                const rest = document.createElement('span');
+                rest.textContent = dateParts.rest;
+                date.append(day, rest);
+
+                const venue = event.venue || {};
+                const venueName = venue.name || 'Venue a anunciar';
+                const location = [venue.city, venue.region, venue.country].filter(Boolean).join(', ');
+                const info = document.createElement('div');
+                info.className = 'event-info';
+                const title = document.createElement('strong');
+                title.textContent = venueName;
+                const meta = document.createElement('span');
+                meta.textContent = location || 'Localização a anunciar';
+                info.append(title, meta);
+
+                const ticketUrl = event.offers?.find((offer) => offer.url)?.url || event.url;
+                const action = document.createElement('a');
+                action.className = 'btn btn-secondary';
+                action.style.padding = '8px 18px';
+                action.style.fontSize = '0.86rem';
+                action.textContent = 'Bilhetes';
+                action.href = ticketUrl || '#';
+
+                if (ticketUrl) {
+                    action.target = '_blank';
+                    action.rel = 'noopener noreferrer';
+                } else {
+                    action.setAttribute('aria-disabled', 'true');
+                    action.addEventListener('click', (event) => event.preventDefault());
+                }
+
+                row.append(date, info, action);
+                return row;
+            };
+
+            const renderEvents = (events) => {
+                clearContainer();
+
+                if (!Array.isArray(events) || events.length === 0) {
+                    renderStatus('Sem concertos anunciados neste momento. Volta em breve para novas datas.');
+                    return;
+                }
+
+                events.forEach((event) => container.appendChild(buildEventRow(event)));
+
+                const source = document.createElement('p');
+                source.className = 'event-source';
+                source.textContent = 'Atualizado automaticamente via Bandsintown.';
+                container.appendChild(source);
+            };
+
+            fetch(endpoint, { headers: { Accept: 'application/json' } })
+                .then((response) => {
+                    if (!response.ok) throw new Error(`Bandsintown API error: ${response.status}`);
+                    return response.json();
+                })
+                .then(renderEvents)
+                .catch(() => {
+                    renderStatus('Não foi possível carregar os concertos agora. Confirma que o artista existe no Bandsintown e tenta novamente.');
+                });
+        })();
+    </script>
+
+</body>
+</html>
