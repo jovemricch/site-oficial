@@ -189,6 +189,14 @@
             text-align: center;
         }
 
+        .loader-avatar{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            border-radius:50%;
+            display:block;
+        }
+
         .loader-mark {
             width: 86px;
             height: 86px;
@@ -255,6 +263,14 @@
             border-radius: inherit;
             background: linear-gradient(90deg, transparent, var(--accent-secondary), var(--accent-color), transparent);
             animation: loadingBar 1.25s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        .loader-percent{
+            margin-top:6px;
+            font-size:.9rem;
+            font-weight:700;
+            color:#fff;
+            letter-spacing:.08em;
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -620,10 +636,11 @@
             transition: var(--transition-smooth);
             text-decoration: none;
             color: inherit;
+            cursor:pointer;
         }
 
         .music-card:hover {
-            transform: translateY(-8px);
+            transform:translateY(-6px) scale(1.02);
             border-color: rgba(168, 85, 247, 0.3);
             background: var(--surface-accent);
         }
@@ -644,7 +661,29 @@
 
         .img-vicia { background-image: url("https://a5.mzstatic.com/us/r1000/0/Music211/v4/5a/0a/08/5a0a089a-9dea-23ee-da53-8921db07581f/1023087.jpg"); }
         .img-vida { background-image: url("https://a5.mzstatic.com/us/r1000/0/Music211/v4/69/f5/33/69f5335f-cd88-1132-3bf7-24cdb6855296/983383.jpg"); }
-        .img-coming { background: linear-gradient(135deg, #151520, #2a2a38); }
+        .img-vicia {
+            background-image: url("https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/5a/0a/08/5a0a089a-9dea-23ee-da53-8921db07581f/1023087.jpg/1000x1000bb.jpg");
+        }
+
+        .img-vida {
+            background-image: url("https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/69/f5/33/69f5335f-cd88-1132-3bf7-24cdb6855296/983383.jpg/1000x1000bb.jpg");
+        }
+
+        .img-balanca {
+            background-image: url("https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/77/42/70/77427099-4691-d7d2-40b3-ebc02680357a/816058.jpg/1000x1000bb.jpg");
+        }
+
+        .img-pandora {
+            background-image: url("https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e3/85/41/e38541b7-9565-01f1-9357-0e4c8360ddf8/692343.jpg/1000x1000bb.jpg");
+        }
+
+        .img-pensabem {
+            background-image: url("https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/3e/37/eb/3e37eb4e-7605-ebc4-ef57-5fd04dd80cde/664248.jpg/1000x1000bb.jpg");
+        }
+
+        .img-viseu {
+            background-image: url("https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/22/57/e5/2257e524-5528-dd6a-34c5-8ad15fd3676d/484467.jpg/1000x1000bb.jpg");
+        }
 
         .music-title {
             font-size: 1.2rem;
@@ -1026,6 +1065,14 @@
                 grid-template-columns: 1fr;
                 text-align: center;
             }
+            body::before {
+                animation: none !important; /* Para o shift de cor */
+                background: linear-gradient(135deg, #050507 0%, #090912 100%) !important; /* Fundo estático e limpo */
+            }
+
+            body::after {animation: none !important; /* Para o drift da grelha */
+                display: none !important; /* Esconde a grelha no mobile (ninguém vai notar a falta dela) */
+            }
 
             header {
                 top: 10px;
@@ -1046,6 +1093,9 @@
             .nav-container::before {
                 inset: 0 12px;
                 border-radius: 16px;
+                backdrop-filter: blur(8px) saturate(120%) !important;
+                -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+                background: rgba(10, 10, 16, 0.88) !important; /* Mais opaco para compensar o menor blur */
             }
 
             .logo {
@@ -1104,6 +1154,12 @@
 
             .form-inline {
                 flex-direction: column;
+            }
+
+            .page-loader {
+                backdrop-filter: none !important; /* O loader não precisa de gastar recursos com blur de fundo */
+                -webkit-backdrop-filter: none !important;
+                background: #060609 !important;
             }
         }
 
@@ -1300,7 +1356,24 @@
             }
         }
 
+        @media (max-width: 768px){
 
+            .section-header{
+                margin-bottom: 32px;
+            }
+
+            .section-desc{
+                line-height: 1.7;
+                margin-top: 12px;
+                margin-bottom: 20px;
+                padding: 0 8px;
+            }
+
+            .grid-videos,
+            .bandsintown-container{
+                margin-top: 16px;
+            }
+        }
 
         .stat-num {
             transition: transform .3s ease;
@@ -1324,11 +1397,12 @@
 <div class="page-loader" id="pageLoader" role="status" aria-live="polite" aria-label="Loading website">
     <div class="loader-card">
         <div class="loader-mark" aria-hidden="true">
-            <span class="loader-logo">JR</span>
+            <img src="ricchprofile.jpeg" alt="JOVEM RICCH" class="loader-avatar">
         </div>
         <div>
             <div class="loader-title">JOVEM RICCH</div>
             <p class="loader-text">Loading...</p>
+            <p class="loader-percent" id="loaderPercent">0%</p>
         </div>
         <div class="loader-progress" aria-hidden="true"><span></span></div>
     </div>
@@ -1365,7 +1439,11 @@
             <h1 class="hero-title">SEXTAPE</h1>
             <p class="hero-desc">O novo projeto conceitual já disponível em todas as plataformas de streaming. Entra na frequência.</p>
             <div class="cta-group">
-                <a href="https://open.spotify.com/intl-pt/track/6IKxHq4yWQu7rmJBErzevy?si=d5d4ca7c4bcb4edf" target="_blank" class="btn btn-primary">Ouvir no Spotify</a>
+                <a href="https://too.fm/sextape"
+                   target="_blank"
+                   class="btn btn-primary">
+                    Ouvir Agora
+                </a>
                 <a href="#newsletter" class="btn btn-secondary">Ouvir Demos Exclusivas</a>
             </div>
         </div>
@@ -1389,21 +1467,43 @@
             <p class="section-desc">Os últimos bangers oficiais nas plataformas de streaming.</p>
         </div>
         <div class="grid-catalogue">
-            <a href="#" class="music-card">
-                <div class="music-img img-vicia" aria-label="Capa de VICIA"></div>
+
+            <a href="https://too.fm/vicia" target="_blank" rel="noopener noreferrer" class="music-card">
+                <div class="music-img img-vicia"></div>
                 <h3 class="music-title">VICIA</h3>
                 <p class="music-meta">Single / Vídeo • 2026</p>
             </a>
-            <a href="#" class="music-card">
-                <div class="music-img img-vida" aria-label="Capa de Vida"></div>
+
+            <a href="https://too.fm/vida" target="_blank" rel="noopener noreferrer" class="music-card">
+                <div class="music-img img-vida"></div>
                 <h3 class="music-title">Vida</h3>
                 <p class="music-meta">Single • 2026</p>
             </a>
-            <a href="#" class="music-card">
-                <div class="music-img img-coming">🔊</div>
-                <h3 class="music-title">Brevemente</h3>
-                <p class="music-meta">New Track • ----</p>
+
+            <a href="https://too.fm/ricchbalanca" target="_blank" rel="noopener noreferrer" class="music-card">
+                <div class="music-img img-balanca"></div>
+                <h3 class="music-title">Balança</h3>
+                <p class="music-meta">Single • 2026</p>
             </a>
+
+            <a href="https://too.fm/pandora" target="_blank" rel="noopener noreferrer" class="music-card">
+                <div class="music-img img-pandora"></div>
+                <h3 class="music-title">Pandora</h3>
+                <p class="music-meta">Single • 2026</p>
+            </a>
+
+            <a href="https://too.fm/pensabem" target="_blank" rel="noopener noreferrer" class="music-card">
+                <div class="music-img img-pensabem"></div>
+                <h3 class="music-title">Pensa Bem</h3>
+                <p class="music-meta">Single • 2026</p>
+            </a>
+
+            <a href="https://too.fm/viseu" target="_blank" rel="noopener noreferrer" class="music-card">
+                <div class="music-img img-viseu"></div>
+                <h3 class="music-title">Viseu</h3>
+                <p class="music-meta">Single • 2026</p>
+            </a>
+
         </div>
     </div>
 </section>
@@ -1449,7 +1549,9 @@
                     <li>Booking aberto para concertos, colaborações e campanhas.</li>
                 </ul>
                 <div class="epk-actions">
-                    <a href="#" class="btn btn-primary" onclick="alert('Substitui este botão pelo link real do teu EPK em PDF.'); event.preventDefault();">Download EPK</a>
+                    <a href="MIDIAKIT%20RICCH.pdf" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                        Download EPK
+                    </a>
                     <a href="#contacto" class="btn btn-secondary">Contactar Booking</a>
                 </div>
             </div>
@@ -1500,14 +1602,21 @@
 </section>
 
 <!-- NEW: MAILING LIST SECTION (ANTI-ZUCK HACK) -->
-<section id="newsletter" class="newsletter-section">
+<<section id="newsletter" class="newsletter-section">
     <div class="container">
         <div class="newsletter-box">
-            <p class="tagline">Acesso VIP Oculto</p>
+            <p class="tagline">Acesso VIP</p>
             <h2>Ouve as Demos Antes de Toda a Gente</h2>
-            <p>Caga nos algoritmos das redes sociais. Deixa o teu e-mail para receberes leaks exclusivos, códigos de desconto para bilhetes e novidades direto na tua caixa de entrada.</p>
-            <form class="form-inline" onsubmit="event.preventDefault(); alert('Inscrição confirmada no meta!');">
-                <input type="email" class="form-control" placeholder="Teu melhor e-mail" required>
+            <p>Deixa o teu e-mail para receberes leaks exclusivos e novidades direto na tua caixa de entrada.</p>
+
+            <!-- O HACK DO SUCESSO: Guarda o e-mail e cospe o fã direto no pre-save -->
+            <form class="form-inline" action="https://formsubmit.co/filipe4931@gmail.com" method="POST">
+                <!-- Redirecionamento automático pós-envio -->
+                <input type="hidden" name="_next" value="https://too.fm/sextape">
+                <input type="hidden" name="_subject" value="🔥 Novo Subscritor Newsletter - Jovem Ricch">
+                <input type="hidden" name="_captcha" value="false">
+
+                <input type="email" name="email" class="form-control" placeholder="Teu melhor e-mail" required>
                 <button type="submit" class="btn btn-primary">Garantir Acesso</button>
             </form>
         </div>
@@ -1519,16 +1628,30 @@
     <div class="container contact-grid">
         <div>
             <h2>Booking & Parcerias</h2>
-            <p style="color: var(--text-muted); margin-top: 12px; margin-bottom: 16px;">Estás interessado em agendar um concerto, organizar uma colaboração de estúdio ou fechar uma parceria de marca? Entra em contacto direto com a equipa de management.</p>
+            <p style="color: var(--text-muted); margin-top: 12px; margin-bottom: 16px;">Estás interessado em agendar um concerto, organizar uma colaboração de estúdio ou fechar uma parceria de marca? Entra em contacto direto comigo.</p>
             <p style="margin-bottom: 24px;"><a href="mailto:filipe4931@gmail.com" style="color: var(--accent-secondary); text-decoration: none; font-weight: 700;">filipe4931@gmail.com</a></p>
             <div class="social-box">
-                <a href="#" class="social-icon instagram" aria-label="Instagram">
+                <a href="https://instagram.com/ilyricch"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="social-icon instagram"
+                   aria-label="Instagram">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 2A3.75 3.75 0 0 0 4 7.75v8.5A3.75 3.75 0 0 0 7.75 20h8.5A3.75 3.75 0 0 0 20 16.25v-8.5A3.75 3.75 0 0 0 16.25 4h-8.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.25-2.35a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"/></svg>
                 </a>
-                <a href="#" class="social-icon spotify" aria-label="Spotify">
+
+                <a href="https://open.spotify.com/intl-pt/artist/6h1XzP48C784CYNKfgCY8D?si=YmODekYSTTGsUceTfGlYGw"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="social-icon spotify"
+                   aria-label="Spotify">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.75.75 0 0 1-1.03.25c-2.82-1.72-6.38-2.11-10.57-1.15a.75.75 0 0 1-.33-1.46c4.58-1.05 8.52-.59 11.68 1.35a.75.75 0 0 1 .25 1.01Zm1.22-2.72a.9.9 0 0 1-1.24.3c-3.23-1.99-8.16-2.56-11.98-1.4a.9.9 0 1 1-.52-1.72c4.34-1.32 9.75-.68 13.44 1.59a.9.9 0 0 1 .3 1.23Zm.1-2.83c-3.87-2.3-10.25-2.51-13.94-1.39a1.05 1.05 0 1 1-.61-2.01c4.24-1.29 11.24-1.04 15.62 1.56a1.05 1.05 0 1 1-1.07 1.84Z"/></svg>
                 </a>
-                <a href="#" class="social-icon youtube" aria-label="YouTube">
+
+                <a href="https://youtube.com/@jovemricch"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="social-icon youtube"
+                   aria-label="YouTube">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.58 7.19a2.73 2.73 0 0 0-1.92-1.93C17.96 4.8 12 4.8 12 4.8s-5.96 0-7.66.46a2.73 2.73 0 0 0-1.92 1.93A28.4 28.4 0 0 0 2 12a28.4 28.4 0 0 0 .42 4.81 2.73 2.73 0 0 0 1.92 1.93c1.7.46 7.66.46 7.66.46s5.96 0 7.66-.46a2.73 2.73 0 0 0 1.92-1.93A28.4 28.4 0 0 0 22 12a28.4 28.4 0 0 0-.42-4.81ZM10 15.27V8.73L15.66 12 10 15.27Z"/></svg>
                 </a>
             </div>
@@ -1563,24 +1686,52 @@
 <script>
     (() => {
         const loader = document.getElementById('pageLoader');
-        const startedAt = Date.now();
-        const minimumDelay = 900;
+        const progressBar = document.querySelector('.loader-progress span');
+        const progressText = document.getElementById('loaderPercent');
 
-        const hideLoader = () => {
-            const wait = Math.max(0, minimumDelay - (Date.now() - startedAt));
+        let progress = 0;
 
-            window.setTimeout(() => {
-                document.body.classList.remove('is-loading');
-                loader?.classList.add('is-hidden');
-                window.setTimeout(() => loader?.remove(), 750);
-            }, wait);
+        const updateProgress = () => {
+            progress += Math.floor(Math.random() * 4) + 1;
+
+            if (progress > 100) progress = 100;
+
+            if (progressBar) {
+                progressBar.style.width = progress + '%';
+            }
+
+            if (progressText) {
+                progressText.textContent = progress + '%';
+            }
+
+            if (progress < 100) {
+                setTimeout(updateProgress, 30 + Math.random() * 40);
+            }
         };
 
-        if (document.readyState === 'complete') {
-            hideLoader();
-        } else {
-            window.addEventListener('load', hideLoader, { once: true });
-        }
+        updateProgress();
+
+        window.addEventListener('load', () => {
+            const finishInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 2;
+
+                    if (progress > 100) progress = 100;
+
+                    if (progressBar) progressBar.style.width = progress + '%';
+                    if (progressText) progressText.textContent = progress + '%';
+                } else {
+                    clearInterval(finishInterval);
+
+                    setTimeout(() => {
+                        document.body.classList.remove('is-loading');
+                        loader?.classList.add('is-hidden');
+
+                        setTimeout(() => loader?.remove(), 750);
+                    }, 300);
+                }
+            }, 15);
+        }, { once: true });
     })();
 
     (() => {
