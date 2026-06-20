@@ -324,15 +324,28 @@
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-decoration: none;
-            color: var(--text-main);
-            background: linear-gradient(45deg, #fff, var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    /* Remove os gradientes antigos que já não fazem falta para a imagem */
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+
+        }
+
+        .logo-img {
+    height: 42px; /* Define a altura perfeita pro teu menu (ajusta se achares pequeno) */
+    width: auto;  /* Mantém a proporção correta para não ficar esticada e feia */
+    object-fit: contain;
+    transition: var(--transition-smooth); /* Para o hover ficar amanteigado */
+
+        }
+
+        .logo-img:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 8px var(--accent-color)); /* Glow roxo discreto */
+
         }
 
         .nav-links {
