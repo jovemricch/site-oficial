@@ -1311,6 +1311,12 @@
             transform: scale(1.05);
         }
 
+
+
+        /* MOBILE HAMBURGER */
+        .menu-toggle{display:none;width:48px;height:48px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04)),rgba(10,10,16,.65);backdrop-filter:blur(20px);cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;z-index:2000}
+        .menu-toggle span{width:21px;height:2px;background:white;border-radius:20px;transition:.35s ease}
+        @media(max-width:768px){.nav-container{flex-direction:row!important;justify-content:space-between;align-items:center}.menu-toggle{display:flex}.nav-links{position:absolute;top:75px;left:0;width:100%;flex-direction:column!important;gap:8px!important;padding:20px;opacity:0;visibility:hidden;transform:translateY(-15px);transition:.35s ease;background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04)),rgba(10,10,16,.85);backdrop-filter:blur(25px);border-radius:20px;border:1px solid rgba(255,255,255,.15)}.nav-links.active{opacity:1;visibility:visible;transform:translateY(0)}.nav-links li{width:100%;text-align:center}.nav-links a{width:100%;justify-content:center;padding:12px!important}.menu-toggle.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}.menu-toggle.active span:nth-child(2){opacity:0}.menu-toggle.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}}
     </style>
 </head>
 <body class="is-loading">
@@ -1334,6 +1340,12 @@
         <a href="#" class="logo">
             <img src="RICCH DOURADO.png" alt="JOVEM RICCH LOGO" class="logo-img">
         </a>
+        <button class="menu-toggle" aria-label="Abrir menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
         <ul class="nav-links">
             <li><a href="#">Início</a></li>
             <li><a href="#musica">Música</a></li>
@@ -1817,5 +1829,12 @@
     });
 </script>
 
+
+<script>
+    const menuToggle=document.querySelector('.menu-toggle');
+    const navLinks=document.querySelector('.nav-links');
+    menuToggle?.addEventListener('click',()=>{menuToggle.classList.toggle('active');navLinks.classList.toggle('active')});
+    document.querySelectorAll('.nav-links a').forEach(link=>link.addEventListener('click',()=>{menuToggle.classList.remove('active');navLinks.classList.remove('active')}));
+</script>
 </body>
 </html>
