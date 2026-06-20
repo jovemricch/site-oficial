@@ -21,7 +21,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            scroll-behavior: smooth;
         }
 
         html {
@@ -1261,6 +1260,40 @@
             }
         }
 
+
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-wrap: wrap !important;
+                overflow-x: visible !important;
+                justify-content: center !important;
+                row-gap: 8px;
+            }
+
+            .nav-links li {
+                flex: 0 0 auto;
+            }
+
+            .nav-links a {
+                font-size: 0.78rem !important;
+                padding: 8px 10px !important;
+            }
+
+            .hero {
+                padding-top: 150px !important;
+            }
+        }
+
+
+
+        .stat-num {
+            transition: transform .3s ease;
+            will-change: transform;
+        }
+
+        .stat-box:hover .stat-num {
+            transform: scale(1.05);
+        }
+
     </style>
 </head>
 <body class="is-loading">
@@ -1393,15 +1426,15 @@
             <aside class="epk-sidebar" aria-label="Resumo profissional do artista">
                 <div class="epk-stats">
                     <div class="stat-box">
-                        <span class="stat-num">200K+</span>
-                        <span class="stat-label">Visualizações acumuladas</span>
+                        <span class="stat-num counter" data-target="200000">200K+</span>
+                        <span class="stat-label">Visualizações no YouTube</span>
                     </div>
                     <div class="stat-box">
                         <span class="stat-num">OAC</span>
                         <span class="stat-label">Canal oficial de artista</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-num">3</span>
+                        <span class="stat-num counter" data-target="6">6</span>
                         <span class="stat-label">Lançamentos em destaque</span>
                     </div>
                     <div class="stat-box">
@@ -1455,7 +1488,7 @@
     <div class="container contact-grid">
         <div>
             <h2>Booking & Parcerias</h2>
-            <p style="color: var(--text-muted); margin-top: 12px; margin-bottom: 16px;">Estás interessado em agendar um concerto, propor uma colaboração de estúdio ou fechar uma parceria de marca? Entra em contacto direto com a equipa de management.</p>
+            <p style="color: var(--text-muted); margin-top: 12px; margin-bottom: 16px;">Estás interessado em agendar um concerto, organizar uma colaboração de estúdio ou fechar uma parceria de marca? Entra em contacto direto com a equipa de management.</p>
             <p style="margin-bottom: 24px;"><a href="mailto:filipe4931@gmail.com" style="color: var(--accent-secondary); text-decoration: none; font-weight: 700;">filipe4931@gmail.com</a></p>
             <div class="social-box">
                 <a href="#" class="social-icon instagram" aria-label="Instagram">
@@ -1671,6 +1704,98 @@
                 renderStatus('Não foi possível carregar os concertos agora. Confirma que o artista existe no Bandsintown e tenta novamente.');
             });
     })();
+
+
+    (() => {
+        const counters = document.querySelectorAll('.counter');
+
+        const easeOutExpo = (x) => {
+            return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+        };
+
+        const animateCounter = (el) => {
+            const target = parseInt(el.dataset.target || '0', 10);
+            const duration = 2200;
+            const start = performance.now();
+
+            const update = (now) => {
+                const rawProgress = Math.min((now - start) / duration, 1);
+                const progress = easeOutExpo(rawProgress);
+                const value = Math.floor(progress * target);
+
+                if (target >= 1000) {
+                    el.textContent = value.toLocaleString('pt-PT') + (target === 200000 ? '+' : '');
+                    el.style.transform = `scale(${1 + (1-progress)*0.12})`;
+                } else {
+                    el.textContent = value;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                    el.style.textShadow = '0 0 18px rgba(168,85,247,.8)';
+                } else {
+                    el.style.transform = 'scale(1)';
+                    el.style.textShadow = '0 0 10px rgba(168,85,247,.35)';
+                    el.textContent = target >= 1000
+                        ? target.toLocaleString('pt-PT') + (target === 200000 ? '+' : '')
+                        : target;
+                }
+            };
+
+            requestAnimationFrame(update);
+            el.style.textShadow = '0 0 18px rgba(168,85,247,.8)';
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                animateCounter(entry.target);
+                observer.unobserve(entry.target);
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => observer.observe(counter));
+    })();
+
+</script>
+
+<!-- INJEÇÃO DO LENIS PARA SMOOTH SCROLL REAL COM A RODA DO RATO -->
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script>
+    // 1. Instanciar o Giga-Chad do Scroll
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+        smoothTouch: false
+    });
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // 2. O HACK SECRETO: Intercetar os cliques no header e forçar o Lenis a deslizar
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault(); // Bloqueia o teleport instantâneo do browser
+
+            const target = this.getAttribute('href');
+
+            if (target === '#') {
+                // Se clicar em "Início" (#), faz scroll suave até ao topo absoluto
+                lenis.scrollTo(0, { duration: 1.2 });
+            } else {
+                // Se clicar em qualquer outra secção, o Lenis faz o deslize perfeito
+                lenis.scrollTo(target, {
+                    duration: 1.2,
+                    offset: -120 // Dá um pequeno desconto para o menu fixo não tapar o título da secção
+                });
+            }
+        });
+    });
 </script>
 
 </body>
