@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade e Cookies | Website Oficial</title>
+    <style>
+        /* --- VARIÁVEIS PARA O LOADER NÃO DAR L --- */
+        :root {
+            --accent-color: #a855f7;
+            --accent-secondary: #00ffcc;
+            --text-muted: #9ca3af;
+        }
+
+        body {
+            animation: fadeInPage 0.6s ease-out;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- RESET & DESIGN SYSTEM --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #08070b;
+            color: #e2e8f0;
+            line-height: 1.7;
+            padding: 60px 20px;
+            overflow-x: hidden;
+        }
+
+        /* --- CSS DO LOADING (PURO HYPE) --- */
+        @keyframes loaderSpin { to { transform: rotate(360deg); } }
+        @keyframes loaderPulse { 0%, 100% { opacity: 0.42; transform: scale(0.92); } 50% { opacity: 1; transform: scale(1); } }
+        @keyframes loadingBar { 0% { transform: translateX(-100%); } 55% { transform: translateX(8%); } 100% { transform: translateX(130%); } }
+
+        body.is-loading {
+            overflow: hidden;
+            background-color: #060609; /* Força o fundo escuro instantaneamente */
+        }
+
+        /* O conteúdo principal fica invisível no server enquanto carrega */
+        body.is-loading .main-container {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* Cheat code para mobile não dar L com a barra de endereço */
+            z-index: 9999;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: radial-gradient(circle at 50% 35%, rgba(168, 85, 247, 0.22), transparent 32%),
+            radial-gradient(circle at 70% 62%, rgba(0, 255, 204, 0.12), transparent 28%),
+            #060609; /* Cor sólida no fundo para 0 transparência do que está atrás */
+            backdrop-filter: blur(28px) saturate(160%);
+            -webkit-backdrop-filter: blur(28px) saturate(160%);
+            transition: opacity 0.7s ease, visibility 0.7s ease;
+        }
+        .page-loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-card {
+            width: min(360px, 100%);
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            padding: 34px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04)), rgba(12, 12, 20, 0.58);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+            text-align: center;
+        }
+
+        .loader-avatar{ width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
+
+        .loader-mark { width: 86px; height: 86px; position: relative; display: grid; place-items: center; }
+        .loader-mark::before, .loader-mark::after { content: ''; position: absolute; inset: 0; border-radius: 50%; }
+        .loader-mark::before {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-secondary);
+            border-right-color: var(--accent-color);
+            filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.45));
+            animation: loaderSpin 1s linear infinite;
+        }
+        .loader-mark::after {
+            inset: 16px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.36), rgba(0, 255, 204, 0.1) 58%, transparent 62%);
+            animation: loaderPulse 1.4s ease-in-out infinite;
+        }
+
+        .loader-title { font-size: 0.85rem; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; color: #fff;}
+        .loader-text { color: var(--text-muted); font-size: 0.95rem; }
+
+        .loader-progress { width: 100%; height: 4px; overflow: hidden; border-radius: 999px; background: rgba(255, 255, 255, 0.08); }
+        .loader-progress span {
+            display: block; width: 60%; height: 100%; border-radius: inherit;
+            background: linear-gradient(90deg, transparent, var(--accent-secondary), var(--accent-color), transparent);
+            animation: loadingBar 1.25s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+        .loader-percent{ margin-top:6px; font-size:.9rem; font-weight:700; color:#fff; letter-spacing:.08em; }
+
+        /* --- CONTINUAÇÃO DO CSS NORMAL --- */
+        .main-container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: #111015;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-top: 4px solid #a855f7;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            animation: floatIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        h1 { font-size: 2rem; font-weight: 800; color: #ffffff; letter-spacing: -0.025em; margin-bottom: 8px; }
+
+        .subtitle { color: #64748b; font-size: 0.9rem; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+
+        .section-block { opacity: 0; animation: textReveal 0.6s ease forwards; }
+        .section-block:nth-child(4) { animation-delay: 0.2s; }
+        .section-block:nth-child(5) { animation-delay: 0.3s; }
+        .section-block:nth-child(6) { animation-delay: 0.4s; }
+        .section-block:nth-child(7) { animation-delay: 0.5s; }
+
+        h2 { font-size: 1.2rem; font-weight: 700; color: #f3e8ff; margin-top: 32px; margin-bottom: 12px; display: flex; align-items: center; }
+        h2::before { content: ""; display: inline-block; width: 4px; height: 16px; background-color: #a855f7; margin-right: 10px; border-radius: 2px; transition: transform 0.3s ease; }
+        .section-block:hover h2::before { transform: scaleY(1.5); background-color: #c084fc; }
+
+        p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 16px; }
+        ul { list-style: none; margin-bottom: 24px; }
+        li { color: #94a3b8; font-size: 0.95rem; margin-bottom: 12px; padding-left: 24px; position: relative; transition: transform 0.2s ease, color 0.2s ease; }
+        li::before { content: "→"; position: absolute; left: 0; color: #a855f7; font-weight: bold; transition: left 0.2s ease; }
+        li:hover { transform: translateX(4px); color: #ffffff; }
+        li:hover::before { left: 4px; color: #c084fc; }
+        strong { color: #ffffff; font-weight: 600; }
+
+        .btn-back {
+            display: inline-flex; align-items: center; justify-content: center; margin-top: 40px; padding: 12px 24px;
+            background-color: transparent; color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-decoration: none; cursor: pointer; width: 100%;
+            text-align: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-back:hover { background-color: #a855f7; color: #ffffff; border-color: #a855f7; box-shadow: 0 0 25px rgba(168, 85, 247, 0.45); transform: translateY(-3px) scale(1.01); }
+
+        @keyframes floatIn { 0% { opacity: 0; transform: translateY(40px) scale(0.97); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes textReveal { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 640px) {
+            body { padding: 24px 12px; }
+            .main-container { padding: 24px 16px; border-radius: 12px; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body class="is-loading">
+
+<div class="page-loader" id="pageLoader" role="status" aria-live="polite" aria-label="Loading website">
+    <div class="loader-card">
+        <div class="loader-mark" aria-hidden="true">
+            <img src="ricchprofile.jpeg" alt="JOVEM RICCH" class="loader-avatar">
+        </div>
+        <div>
+            <div class="loader-title">JOVEM RICCH</div>
+            <p class="loader-text">Loading...</p>
+            <p class="loader-percent" id="loaderPercent">0%</p>
+        </div>
+        <div class="loader-progress" aria-hidden="true"><span></span></div>
+    </div>
+</div>
+
+<div class="main-container">
+    <h1>Política de Privacidade e Cookies</h1>
+    <div class="subtitle">Última atualização: Junho de 2026</div>
+
+    <p>A tua privacidade é extremamente importante para nós. Esta Política de Privacidade e Cookies explica de forma transparente como o nosso website oficial recolhe, utiliza e protege os teus dados digitais.</p>
+
+    <div class="section-block">
+        <h2>1. Responsável pelo Tratamento</h2>
+        <p>O tratamento dos dados recolhidos através deste website é gerido pela equipa oficial, com o objetivo estrito de gerir a presença digital, analisar o tráfego e otimizar campanhas de lançamentos musicais e eventos.</p>
+    </div>
+
+    <div class="section-block">
+        <h2>2. Que Dados Recolhemos e Como?</h2>
+        <p>Utilizamos ferramentas líderes de mercado para monitorização e marketing de performance. Estes scripts estão desativados por padrão e só começam a funcionar após clicares em "Aceitar":</p>
+        <ul>
+            <li><strong>Métricas de Navegação (Google Analytics 4):</strong> Analisa o comportamento dentro do site (tempo de permanência, páginas visitadas, localização geral e tipo de dispositivo).</li>
+            <li><strong>Rastreio Publicitário (Meta Pixel):</strong> Conecta a tua visita a identificadores digitais anónimos da Meta para nos permitir apresentar anúncios relevantes no Instagram e Facebook.</li>
+            <li><strong>Plataformas de Distribuição:</strong> Links direcionados para serviços de streaming ou pre-saves (como Too Lost) seguem as políticas de privacidade das respetivas plataformas.</li>
+        </ul>
+    </div>
+
+    <div class="section-block">
+        <h2>3. O que são Cookies?</h2>
+        <p>Cookies são pequenos ficheiros temporários guardados no teu dispositivo. Permitem que o site reconheça se já nos visitaste antes para, por exemplo, não te voltar a mostrar o banner de aviso inicial.</p>
+    </div>
+
+    <div class="section-block">
+        <h2>4. Controlo de Privacidade</h2>
+        <p>Podes alterar a tua escolha a qualquer momento limpando os cookies do teu navegador ou utilizando as opções do banner de consentimento inicial.</p>
+    </div>
+
+    <a href="index.html" class="btn-back">← Voltar ao Website Oficial</a>
+</div>
+
+<script>
+    (() => {
+        const loader = document.getElementById('pageLoader');
+        const progressBar = document.querySelector('.loader-progress span');
+        const progressText = document.getElementById('loaderPercent');
+
+        let progress = 0;
+
+        const updateProgress = () => {
+            progress += Math.floor(Math.random() * 4) + 1;
+            if (progress > 100) progress = 100;
+
+            if (progressBar) progressBar.style.width = progress + '%';
+            if (progressText) progressText.textContent = progress + '%';
+
+            if (progress < 100) {
+                setTimeout(updateProgress, 30 + Math.random() * 40);
+            }
+        };
+
+        updateProgress();
+
+        window.addEventListener('load', () => {
+            const finishInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 2;
+                    if (progress > 100) progress = 100;
+
+                    if (progressBar) progressBar.style.width = progress + '%';
+                    if (progressText) progressText.textContent = progress + '%';
+                } else {
+                    clearInterval(finishInterval);
+                    setTimeout(() => {
+                        document.body.classList.remove('is-loading');
+                        loader?.classList.add('is-hidden');
+                        setTimeout(() => loader?.remove(), 750);
+                    }, 300);
+                }
+            }, 15);
+        }, { once: true });
+    })();
+</script>
+
+</body>
+</html>
