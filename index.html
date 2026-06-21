@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="ricchicon.png">
     <title>JOVEM RICCH | Official Website</title>
     <style>
-        /* --- CONFIGURAÇÕES GERAIS & VARIÁVEIS (THE META) --- */
+
+        body {
+            animation: fadeInPage 0.6s ease-out;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- CONFIGURAÇÕES GERAIS & VARIÁVEIS --- */
         :root {
             --bg-color: #060609;
             --surface-color: #0f0f16;
@@ -1063,6 +1074,83 @@
 
         }
 
+        /* --- ESTILOS DO BANNER DE COOKIES --- */
+        .cookie-banner {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            background-color: #0f0f16;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            animation: slideUp 0.5s ease;
+        }
+
+        .cookie-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cookie-content p {
+            color: #9ca3af;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .cookie-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-cookie-primary, .btn-cookie-secondary {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cookie-primary {
+            background-color: #a855f7;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-cookie-primary:hover {
+            background-color: #9333ea;
+        }
+
+        .btn-cookie-secondary {
+            background-color: transparent;
+            color: #9ca3af;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-cookie-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        @keyframes slideUp {
+            from { transform: translate(-50%, 40px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .cookie-banner { bottom: 16px; padding: 16px; }
+            .cookie-actions { flex-direction: column-reverse; width: 100%; }
+            .btn-cookie-primary, .btn-cookie-secondary { width: 100%; text-align: center; }
+        }
+
         /* RESPONSIVIDADE */
         @media  (max-width: 968px) {
             .hero-grid, .grid-videos, .epk-panel, .contact-grid {
@@ -1572,7 +1660,7 @@
                         <span class="stat-label">Canal oficial de artista</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-num counter" data-target="6">6</span>
+                        <span class="stat-num counter" data-target="7">7</span>
                         <span class="stat-label">Lançamentos em destaque</span>
                     </div>
                     <div class="stat-box">
@@ -1687,8 +1775,20 @@
 <footer>
     <div class="container">
         <p>&copy; 2026 JOVEM RICCH. Todos os direitos reservados. Prod. by DayzVibes.</p>
+        <a href="privacidade.html" style="color: #9ca3af; font-size: 0.8rem; text-decoration: underline; margin-top: 10px; display: inline-block;">Política de Privacidade e Cookies</a>
     </div>
 </footer>
+
+<!-- BANNER DE CONSENTIMENTO DE COOKIES (RGPD) -->
+<div id="cookieBanner" class="cookie-banner" style="display: none;">
+    <div class="cookie-content">
+        <p>Este website utiliza cookies para otimizar a sua experiência e analisar o tráfego para fins de marketing. Ao clicar em "Aceitar", concorda com o uso destas tecnologias de rastreio. Conheça a nossa <a href="privacidade.html" style="color: #a855f7; text-decoration: underline;">Política de Privacidade</a>.</p>
+        <div class="cookie-actions">
+            <button id="btnDenyCookies" class="btn-cookie-secondary">Recusar</button>
+            <button id="btnAcceptCookies" class="btn-cookie-primary">Aceitar</button>
+        </div>
+    </div>
+</div>
 
 <script>
     (() => {
@@ -2019,6 +2119,75 @@
             }
         });
     });
+
+    // --- SISTEMA DE GESTÃO DE COOKIES E RASTREIO (META & GOOGLE) ---
+    (() => {
+        const banner = document.getElementById('cookieBanner');
+        const btnAccept = document.getElementById('btnAcceptCookies');
+        const btnDeny = document.getElementById('btnDenyCookies');
+
+        // CONFIGURAÇÃO DOS IDs (Substitua quando tiver as contas criadas)
+        const META_PIXEL_ID = 'SEU_ID_DO_META_AQUI'; // Exemplo: 123456789012345
+        const GOOGLE_ANALYTICS_ID = 'SEU_ID_DO_GOOGLE_AQUI'; // Exemplo: G-ABC123XYZ
+
+        // Função que injeta o código de rastreio de ambas as plataformas
+        const initTracking = () => {
+            // 1. Inicializar Meta Pixel
+            if (META_PIXEL_ID && META_PIXEL_ID !== 'SEU_ID_DO_META_AQUI') {
+                !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+                    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+                    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+                    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+                fbq('init', META_PIXEL_ID);
+                fbq('track', 'PageView');
+            }
+
+            // 2. Inicializar Google Analytics (GA4)
+            if (GOOGLE_ANALYTICS_ID && GOOGLE_ANALYTICS_ID !== 'SEU_ID_DO_GOOGLE_AQUI') {
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`;
+                document.head.appendChild(script);
+
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', GOOGLE_ANALYTICS_ID);
+            }
+        };
+
+        // Lógica de Controlo de Consentimento
+        const consent = localStorage.getItem('cookieConsent');
+
+        if (consent === 'granted') {
+            // O utilizador já aceitou previamente. Iniciar rastreio.
+            initTracking();
+        } else if (consent === null) {
+            // Primeira visita. Mostrar banner com 1 segundo de atraso.
+            setTimeout(() => {
+                if (banner) banner.style.display = 'block';
+            }, 1000);
+        }
+
+        // Ações dos Botões
+        if (btnAccept) {
+            btnAccept.addEventListener('click', () => {
+                localStorage.setItem('cookieConsent', 'granted');
+                if (banner) banner.style.display = 'none';
+                initTracking(); // Ativa os scripts imediatamente
+            });
+        }
+
+        if (btnDeny) {
+            btnDeny.addEventListener('click', () => {
+                localStorage.setItem('cookieConsent', 'denied');
+                if (banner) banner.style.display = 'none';
+                // Nada é ativado. A privacidade do utilizador é mantida.
+            });
+        }
+    })();
 </script>
 
 
@@ -2028,5 +2197,7 @@
     menuToggle?.addEventListener('click',()=>{menuToggle.classList.toggle('active');navLinks.classList.toggle('active')});
     document.querySelectorAll('.nav-links a').forEach(link=>link.addEventListener('click',()=>{menuToggle.classList.remove('active');navLinks.classList.remove('active')}));
 </script>
+
+
 </body>
 </html>
