@@ -2155,9 +2155,9 @@
         const btnAccept = document.getElementById('btnAcceptCookies');
         const btnDeny = document.getElementById('btnDenyCookies');
 
-        // CONFIGURAÇÃO DOS IDs (Substitua quando tiver as contas criadas)
-        const META_PIXEL_ID = 'SEU_ID_DO_META_AQUI'; // Exemplo: 123456789012345
-        const GOOGLE_ANALYTICS_ID = 'SEU_ID_DO_GOOGLE_AQUI'; // Exemplo: G-ABC123XYZ
+        // CONFIGURAÇÃO DOS IDs
+        const META_PIXEL_ID = 'SEU_ID_DO_META_AQUI';
+        const GOOGLE_ANALYTICS_ID = 'G-TEP6889DPR';
 
         // Função que injeta o código de rastreio de ambas as plataformas
         const initTracking = () => {
@@ -2174,16 +2174,32 @@
             }
 
             // 2. Inicializar Google Analytics (GA4)
-            if (GOOGLE_ANALYTICS_ID && GOOGLE_ANALYTICS_ID !== 'SEU_ID_DO_GOOGLE_AQUI') {
+            if (GOOGLE_ANALYTICS_ID) {
                 const script = document.createElement('script');
                 script.async = true;
                 script.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`;
-                document.head.appendChild(script);
 
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', GOOGLE_ANALYTICS_ID);
+                script.onload = () => {
+                    window.dataLayer = window.dataLayer || [];
+
+                    function gtag() {
+                        dataLayer.push(arguments);
+                    }
+
+                    window.gtag = gtag;
+
+                    gtag('js', new Date());
+
+                    gtag('consent', 'default', {
+                        analytics_storage: 'granted'
+                    });
+
+                    gtag('config', GOOGLE_ANALYTICS_ID, {
+                        anonymize_ip: true
+                    });
+                };
+
+                document.head.appendChild(script);
             }
         };
 
